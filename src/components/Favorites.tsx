@@ -27,7 +27,11 @@ const Favorites: FC<FavoritesProps> = ({
   const [arrayFavoritesCurrency, setArrayFavoritesCurrency] = useState<
     currObj[] | [] | any
   >([]);
-  const [initialFavorites, setInitialFavorites] = useState(["PLN", "EUR"]);
+  const [initialFavorites, setInitialFavorites] = useState([
+    "PLN",
+    "EUR",
+    "JPY",
+  ]);
 
   const { doPropertiesOnObject, policz } = useRateDifference(graph);
 
