@@ -1,32 +1,49 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { Currency } from "./Currency";
 
 type CountryPickerProps = {
-  baseCurrency: any;
-  ratesArray: any[];
-  addCurrency: (n: any) => void;
+  formularz: string;
+  rates: any;
+  setId: (id: string) => void;
+  searchedCurr: any;
 };
 
-export const CountryPicker: FC<CountryPickerProps> = ({
-  baseCurrency,
-  ratesArray,
-  addCurrency,
+const CountryPicker: FC<CountryPickerProps> = ({
+  formularz,
+  rates,
+  setId,
+  searchedCurr,
 }) => {
+  
+  const qwe = Object.entries(rates);
+  
+  const asd =
+  searchedCurr &&
+  qwe.filter((key) => {
+    return key[0].includes(searchedCurr.toUpperCase());
+  });
+  const zxc = asd && Object.fromEntries(asd);
+  rates = searchedCurr ? rates = zxc : rates
+  
+  useEffect(() => {}, [searchedCurr]);
+
   return (
-    <section className="py-4 mt-2 grid gap-2 grid-cols-6 place-items-center w-1/2 h-[520px] px-5 mx-5 overflow-scroll border-2 border-black">
-      {ratesArray &&
-        ratesArray.map(([name, value], index) => {
+    <section className="py-4 mt-2 place-items-center grid gap-2 px-10 content-start overflow-scroll border-2 border-black  h-[520px] grid-cols-3 sm:bg-green-600 md:grid-cols-3 md:bg-red-600 lg:grid-cols-5 lg:bg-gray-600 xl:bg-white xl:grid-cols-6 xl:px-5">
+      {rates &&
+        Object.entries(rates).map((rate, index: number) => {
           return (
             <Currency
               key={index}
-              name={name}
-              value={value}
-              base={baseCurrency}
-              addCurrency={addCurrency}
+              name={rate[0] as string}
+              value={rate[1] as number}
+              base={formularz}
+              setId={setId}
             />
           );
         })}
     </section>
   );
 };
+
+export default CountryPicker;

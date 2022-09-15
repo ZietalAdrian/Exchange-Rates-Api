@@ -4,44 +4,20 @@ type CurrencyProps = {
   name: string;
   value: number;
   base: string;
-  favorite?: boolean;
-  addCurrency?: (n: any) => void;
-  removeCurrency?: (n: any) => void;
+  setId: (id: string) => void;
 };
 
-export const Currency: FC<CurrencyProps> = ({
-  name,
-  value,
-  base,
-  favorite,
-  addCurrency,
-  removeCurrency,
-}) => {
+export const Currency: FC<CurrencyProps> = ({ name, value, base, setId }) => {
   return (
-    <>
-      {favorite ? (
-        <div
-          className="w-32 text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none"
-          onClick={() => removeCurrency!(name)}
-        >
-          <div>
-            {`${name} / `}
-            <span className="text-xs">{base}</span>:
-          </div>
-          <div className="text-lg ">{value}</div>
-        </div>
-      ) : (
-        <div
-          className="w-24 text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none"
-          onClick={() => addCurrency!(name)}
-        >
-          <div className="text-xs font-bold">
-            {`${name} / `}
-            <span className="font-light">{base}</span>:
-          </div>
-          <div className="text-sm">{value}</div>
-        </div>
-      )}
-    </>
+    <div
+      onClick={() => setId(name)}
+      className="w-24 text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none"
+    >
+      <div className="text-xs font-bold">
+        {`${name} / `}
+        <span className="font-light">{base}</span>:
+      </div>
+      <div className="text-sm">{value}</div>
+    </div>
   );
 };
