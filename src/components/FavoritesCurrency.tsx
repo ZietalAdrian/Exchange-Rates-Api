@@ -29,7 +29,7 @@ const FavoritesCurrency: FC<FavoritesCurrencyProps> = ({
       <div className="flex flex-col w-[100px] pt-1">
         <div className="text-base font-normal">
           {`${name} / `}
-          <span className="text-sm font-extralight">{base}</span>:
+          <span className="text-sm font-light">{base}</span>:
         </div>
         <span>{value}</span>
       </div>

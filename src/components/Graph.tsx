@@ -117,7 +117,7 @@ const Graph: FC<GraphProps> = ({
       <div className="h-[27px] pl-2 flex justify-between border-b-[1px] border-black border-dotted">
         <div className="text-base font-normal">
           {`${wanted} / `}
-          <span className="text-sm font-extralight">{formularz}</span>
+          <span className="text-sm font-light">{formularz}</span>
         </div>
         <div
           className={`flex ${
