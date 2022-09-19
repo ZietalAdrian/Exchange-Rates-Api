@@ -6,10 +6,10 @@ import Favorites from "./components/Favorites";
 import Graph from "./components/Graph";
 
 function App() {
-  const [formularz, setFormularz] = useState<string>("USD");
+  const [baseCurr, setBaseCurr] = useState<string>("USD");
   const [id, setId] = useState<string>("GBP");
   const [searchedCurr, setSearchedCurr] = useState<string>();
-  const [addFavCurr, setAddFavCurr] = useState<string | undefined>();
+  const [addFavCurr, setAddFavCurr] = useState<string>();
 
   const subtractWeek = () => {
     let date = new Date();
@@ -24,7 +24,7 @@ function App() {
 
   const graph: { [key: string]: { [key: string]: number } } | [] = useGraphApi(
     subtractMonth(),
-    formularz
+    baseCurr
   );
 
   const latestRates: any =
@@ -35,7 +35,7 @@ function App() {
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.toUpperCase();
     value = value.length > 3 ? value.slice(0, 3) : value;
-    setFormularz((prev) => (value.length === 3 ? value : prev));
+    setBaseCurr((prev) => (value.length === 3 ? value : prev));
   };
 
   const handleOnSubmit = (e: FormEvent) => {
@@ -79,9 +79,9 @@ function App() {
         </form>
       </div>
       <div className="flex justify-center flex-col md:flex-row">
-        <div className="mx-auto order-last md:order-first w-[450px] sm:w-[650px] md:w-[350px] lg:w-[600px] xl:w-[720px] xl:ml-4">
+        <div className="mx-auto order-last md:order-first w-[450px] sm:w-[600px] md:w-[250px] md:mr-2 lg:w-[600px] xl:w-[720px] xl:ml-4">
           <CountryPicker
-            formularz={formularz}
+            baseCurr={baseCurr}
             rates={latestRates}
             setId={setId}
             searchedCurr={searchedCurr}
@@ -91,7 +91,7 @@ function App() {
           {latestRates && (
             <Graph
               graph={graph}
-              formularz={formularz}
+              baseCurr={baseCurr}
               wanted={id}
               big={true}
               setAddFavCurr={setAddFavCurr}
@@ -99,7 +99,7 @@ function App() {
           )}
           {latestRates && (
             <Favorites
-              formularz={formularz}
+              baseCurr={baseCurr}
               rates={latestRates}
               graph={graph}
               setId={setId}

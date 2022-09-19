@@ -8,7 +8,7 @@ Chart.register(CategoryScale);
 
 type GraphProps = {
   graph: any;
-  formularz: string;
+  baseCurr: string;
   wanted: string;
   big?: boolean;
   setAddFavCurr?: (addFavCurr: string) => void;
@@ -16,7 +16,7 @@ type GraphProps = {
 
 const Graph: FC<GraphProps> = ({
   graph,
-  formularz,
+  baseCurr: baseCurr,
   wanted,
   big = false,
   setAddFavCurr,
@@ -62,7 +62,7 @@ const Graph: FC<GraphProps> = ({
       labels: dates && dates.length > 1 && dates.map((date: any) => date),
       datasets: [
         {
-          label: `${wanted} / ${formularz}`,
+          label: `${wanted} / ${baseCurr}`,
           data:
             timeSeries &&
             timeSeries.length > 1 &&
@@ -72,13 +72,11 @@ const Graph: FC<GraphProps> = ({
         },
       ],
     });
-  }, [graph, wanted, formularz]);
-
+  }, [graph, wanted, baseCurr]);
 
   const options = big
     ? {
         maintainAspectRatio: false,
-        // responsive: true,
         plugins: {
           legend: {
             display: false,
@@ -113,11 +111,11 @@ const Graph: FC<GraphProps> = ({
       };
 
   return big ? (
-    <section className="mt-2 p-1 border-2 border-black h-[250px] w-[450px] sm:w-[600px] md:w-[500px] lg:w-[660px] lg:mr-4 ">
+    <section className="mt-2 p-1 border-2 border-black h-[250px] w-[450px] sm:w-[600px] md:w-[500px] lg:w-[600px] lg:mr-4  xl:w-[660px]">
       <div className="h-[27px] pl-2 flex justify-between border-b-[1px] border-black border-dotted">
         <div className="text-base font-normal">
           {`${wanted} / `}
-          <span className="text-sm font-light">{formularz}</span>
+          <span className="text-sm font-light">{baseCurr}</span>
         </div>
         <div
           className={`flex ${
@@ -151,8 +149,8 @@ const Graph: FC<GraphProps> = ({
       </div>
     </section>
   ) : (
-    <section className="w-[115px] border-[0.2px] border-black rounded-lg overflow-hidden">
-      <div className="w-[125px] h-[70px] p-1 relative -left-2 -top-2 pt-2">
+    <section className="w-[115px] border-[0.2px] border-black rounded-lg overflow-hidden ">
+      <div className="h-[70px] w-[125px] p-1 relative -left-2 -top-2 pt-2 sm:w-[108px] md:w-[125px]">
         {graphData && <Line data={graphData} options={options} />}
       </div>
     </section>

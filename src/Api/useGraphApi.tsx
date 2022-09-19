@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useGraphApi = (startDate: string, formularz: string) => {
+const useGraphApi = (startDate: string, baseCurr: string) => {
   const [graph, setGraph] = useState<{[key: string]: {[key: string]: number}} | []>([]);
 
   let actualDate = new Date().toISOString().slice(0, 10);
@@ -9,7 +9,7 @@ const useGraphApi = (startDate: string, formularz: string) => {
     fetch(
       "https://api.exchangerate.host/timeseries?" +
         new URLSearchParams({
-          base: formularz,
+          base: baseCurr,
           start_date: startDate,
           end_date: actualDate,
           places: "4",
@@ -18,7 +18,7 @@ const useGraphApi = (startDate: string, formularz: string) => {
       .then((response) => response.json())
       .then((data) => setGraph(data.rates))
       .catch((err) => console.log(err));
-  }, [formularz]);
+  }, [baseCurr]);
 
   return graph;
 };

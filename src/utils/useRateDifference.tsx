@@ -17,32 +17,32 @@ const useRateDifference = (graph: any) => {
   };
 
   const percentage = (v1: number, v2: number) => {
-    let x = (v1 / v2) * 100;
-    return 100 - x;
+    let result = (v1 / v2) * 100;
+    return 100 - result;
   };
 
   const rateDifference = (name: string) => {
-    const aaa: any =
+    const last: any =
       graph && Object.entries(graph)[Object.entries(graph).length - 1];
-    const last = Object.entries(aaa[1]).find((entry: any) => {
+    const findLast = Object.entries(last[1]).find((entry: any) => {
       return entry[0] === name;
     });
-    const bbb: any =
+    const oneBeforeLast: any =
       graph && Object.entries(graph)[Object.entries(graph).length - 2];
-    const oneBeforeLast = Object.entries(bbb[1]).find((entry: any) => {
+    const findOneBeforeLast = Object.entries(oneBeforeLast[1]).find((entry: any) => {
       return entry[0] === name;
     });
-    let result: any;
-    if (last && oneBeforeLast) {
-      result = (last[1] as number) - (oneBeforeLast[1] as number);
+    let calculatedAmount: any;
+    if (findLast && findOneBeforeLast) {
+      calculatedAmount = (findLast[1] as number) - (findOneBeforeLast[1] as number);
 
-      const zzz = percentage(oneBeforeLast[1] as number, last[1] as number);
-      return [result.toFixed(4), zzz.toFixed(2) + "%"];
+      const calculatedPercentage = percentage(findOneBeforeLast[1] as number, findLast[1] as number);
+      return [calculatedAmount.toFixed(4), calculatedPercentage.toFixed(2) + "%"];
     }
   };
 
-  const policz = (obj: any) => {
-    const xxx: currObj = obj.map((item: any) => {
+  const makeObject = (obj: any) => {
+    const object: currObj = obj.map((item: any) => {
       const { name, value } = item;
       const difference = rateDifference(item.name);
       if (difference) {
@@ -51,10 +51,10 @@ const useRateDifference = (graph: any) => {
         return { name, value, diffAmount, diffPercentage };
       }
     });
-    return xxx;
+    return object;
   };
 
-  return { doPropertiesOnObject, policz, rateDifference };
+  return { doPropertiesOnObject, makeObject, rateDifference };
 };
 
 export default useRateDifference;

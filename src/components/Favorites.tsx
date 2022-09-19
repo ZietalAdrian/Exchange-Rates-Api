@@ -4,8 +4,8 @@ import useRateDifference from "../utils/useRateDifference";
 import FavoritesCurrency from "./FavoritesCurrency";
 
 interface FavoritesProps {
-  formularz: string;
-  rates: any; //komu to potrzebne ?
+  baseCurr: string;
+  rates: { [key: string]: number }
   graph: { [key: string]: { [key: string]: number } } | [];
   setId: (id: string) => void;
   addFavCurr?: string;
@@ -18,7 +18,7 @@ type currObj = {
 };
 
 const Favorites: FC<FavoritesProps> = ({
-  formularz,
+  baseCurr: baseCurr,
   rates,
   graph,
   setId,
@@ -33,7 +33,7 @@ const Favorites: FC<FavoritesProps> = ({
     "JPY",
   ]);
 
-  const { doPropertiesOnObject, policz } = useRateDifference(graph);
+  const { doPropertiesOnObject, makeObject } = useRateDifference(graph);
 
   const something = () => {
     let result: any[] = [];
@@ -53,7 +53,7 @@ const Favorites: FC<FavoritesProps> = ({
   };
 
   useEffect(() => {
-    setArrayFavoritesCurrency(policz(something()));
+    setArrayFavoritesCurrency(makeObject(something()));
   }, [rates, initialFavorites]);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const Favorites: FC<FavoritesProps> = ({
       <div className="relative left-1 sm:left-0">
         <span>Favorites</span>
       </div>
-      <section className="grid content-start place-items-center gap-2 pl-5 py-3 px-5 border-2 border-black overflow-scroll h-[246px] w-[450px] sm:w-[600px] md:w-[500px] lg:w-[600px] xl:w-[660px] lg:grid-cols-2 ">
+      <section className="grid content-start place-items-center gap-2 pl-5 py-3 px-5 border-2 border-black overflow-scroll h-[246px] w-[450px] sm:w-[600px] sm:px-3 sm:grid-cols-2 md:w-[500px] md:grid-cols-1 lg:grid-cols-2 lg:w-[600px] xl:w-[660px]  ">
         {arrayFavoritesCurrency &&
           arrayFavoritesCurrency.map((item: any, index: number) => {
             const { name, value, diffAmount, diffPercentage } = item;
@@ -76,7 +76,7 @@ const Favorites: FC<FavoritesProps> = ({
                 key={index}
                 name={name}
                 value={value}
-                base={formularz}
+                baseCurr={baseCurr}
                 graph={graph}
                 diffAmount={diffAmount}
                 diffPercentage={diffPercentage}
