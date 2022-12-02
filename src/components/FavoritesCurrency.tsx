@@ -24,7 +24,7 @@ const FavoritesCurrency: FC<FavoritesCurrencyProps> = ({
   return (
     <div
       onClick={() => setId(name)}
-      className="flex justify-between text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none h-16 w-[380px] sm:w-[280px] md:w-[380px] lg:w-[300px]"
+      className="flex justify-between text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none h-16 w-[380px] sm:w-[280px] md:w-[380px] lg:w-[280px] xl:w-[300px]"
     >
       <div className="flex flex-col w-[100px] pt-1">
         <div className="text-base font-normal">
