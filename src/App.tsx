@@ -1,4 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import useGraphApi from "./Api/useGraphApi";
 import CountryPicker from "./components/CountryPicker";
@@ -48,6 +50,7 @@ function App() {
   };
 
   return (
+    <DndProvider backend={HTML5Backend}>
     <div>
       <header className="flex justify-center">
         <h1 className="uppercase mt-10 text-xl border-b-2 border-black border-solid pb-2 xl:px-96 md:px-48 ">
@@ -109,6 +112,7 @@ function App() {
         </div>
       </div>
     </div>
+    </DndProvider>
   );
 }
 

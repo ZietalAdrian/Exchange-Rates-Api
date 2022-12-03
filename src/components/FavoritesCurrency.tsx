@@ -1,4 +1,6 @@
-import { FC } from "react";
+import { FC,useEffect } from "react";
+import { useDrag } from "react-dnd";
+
 import Graph from "./Graph";
 
 type FavoritesCurrencyProps = {
@@ -9,6 +11,7 @@ type FavoritesCurrencyProps = {
   diffPercentage: string;
   graph?: { [key: string]: { [key: string]: number } } | [];
   setId: (id: string) => void;
+  setTrash: (trash: boolean) => void;
 };
 
 const FavoritesCurrency: FC<FavoritesCurrencyProps> = ({
@@ -19,10 +22,23 @@ const FavoritesCurrency: FC<FavoritesCurrencyProps> = ({
   diffAmount = "",
   diffPercentage = "",
   setId,
+  setTrash
 }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "FavCurr",
+    item: { id: name },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  useEffect(() => {
+    setTrash(isDragging ? true : false);
+  }, [isDragging]);
 
   return (
     <div
+    ref={drag}
       onClick={() => setId(name)}
       className="flex justify-between text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none h-16 w-[380px] sm:w-[280px] md:w-[380px] lg:w-[280px] xl:w-[300px]"
     >
