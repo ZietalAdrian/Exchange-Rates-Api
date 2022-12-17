@@ -1,32 +1,34 @@
-import { FC,useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useDrag } from "react-dnd";
 
 import Graph from "./Graph";
 
-type FavoritesCurrencyProps = {
+type currObj = {
   name: string;
+  base: string;
   value: number;
-  baseCurr: string;
-  diffAmount: string;
-  diffPercentage: string;
-  graph?: { [key: string]: { [key: string]: number } } | [];
-  setId: (id: string) => void;
+  diffAmount?: string;
+  diffPercentage?: string;
+  timeseries: number[];
+  dates: string[];
+};
+
+type FavoritesCurrencyProps = {
+  obj: currObj;
   setTrash: (trash: boolean) => void;
+  setMiddleman: (middleman: currObj) => void;
 };
 
 const FavoritesCurrency: FC<FavoritesCurrencyProps> = ({
-  name,
-  value,
-  baseCurr,
-  graph,
-  diffAmount = "",
-  diffPercentage = "",
-  setId,
-  setTrash
+  obj,
+  setTrash,
+  setMiddleman,
 }) => {
+  const { name, base, value, diffAmount, diffPercentage } = obj;
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "FavCurr",
-    item: { id: name },
+    item: { base: base, name: name },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -38,28 +40,36 @@ const FavoritesCurrency: FC<FavoritesCurrencyProps> = ({
 
   return (
     <div
-    ref={drag}
-      onClick={() => setId(name)}
+      ref={drag}
+      onClick={() => setMiddleman(obj)}
       className="flex justify-between text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none h-16 w-[380px] sm:w-[280px] md:w-[380px] lg:w-[280px] xl:w-[300px]"
     >
       <div className="flex flex-col w-[100px] pt-1">
         <div className="text-base font-normal">
           {`${name} / `}
-          <span className="text-sm font-light">{baseCurr}</span>:
+          <span className="text-sm font-light">{base}</span>:
         </div>
         <span>{value}</span>
       </div>
       <div
         className={`flex flex-col w-[100px] pt-1 pr-2 ${
-          diffAmount[0] === "-" ? "text-red-500" : "text-green-500"
+          diffAmount && diffAmount[0] === "-"
+            ? "text-red-500"
+            : "text-green-500"
         }`}
       >
         <span>
-          {diffPercentage[0] === "-" ? diffPercentage.slice(1) : diffPercentage}
+          {diffPercentage && diffPercentage[0] === "-"
+            ? diffPercentage.slice(1)
+            : diffPercentage}
         </span>
-        <span>{diffAmount[0] === "-" ? diffAmount.slice(1) : diffAmount}</span>
+        <span>
+          {diffAmount && diffAmount[0] === "-"
+            ? diffAmount.slice(1)
+            : diffAmount}
+        </span>
       </div>
-      {graph && <Graph graph={graph} baseCurr={baseCurr} wanted={name}></Graph>}
+      {obj && <Graph obj={obj}></Graph>}
     </div>
   );
 };

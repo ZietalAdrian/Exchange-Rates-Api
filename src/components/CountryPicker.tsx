@@ -4,7 +4,7 @@ import { Currency } from "./Currency";
 
 type CountryPickerProps = {
   baseCurr: string;
-  rates: { [key: string]: number };
+  rates?: { [key: string]: number };
   setId: (id: string) => void;
   searchedCurr?: string;
 };
@@ -17,10 +17,15 @@ const CountryPicker: FC<CountryPickerProps> = ({
 }) => {
   const [baseArray, setBaseArray] = useState<{ [key: string]: number }>();
   const [resultArray, setResultArray] = useState<{ [key: string]: number }>();
+  const [middleman, setMiddleman] = useState<string>();
 
   useEffect(() => {
-    setBaseArray(rates);
+    rates && setBaseArray(rates);
   }, [rates]);
+
+  useEffect(() => {
+    middleman && setId(middleman);
+  }, [middleman]);
 
   useEffect(() => {
     const changedToArray = baseArray && Object.entries(baseArray);
@@ -35,7 +40,6 @@ const CountryPicker: FC<CountryPickerProps> = ({
     const filteredArray = filterArray && Object.fromEntries(filterArray);
 
     setResultArray(filteredArray && searchedCurr ? filteredArray : baseArray);
-    
   }, [searchedCurr, baseArray]);
 
   return (
@@ -48,7 +52,7 @@ const CountryPicker: FC<CountryPickerProps> = ({
               name={rate[0] as string}
               value={rate[1] as number}
               base={baseCurr}
-              setId={setId}
+              setMiddleman={setMiddleman}
             />
           );
         })}

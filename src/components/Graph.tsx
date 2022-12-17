@@ -1,78 +1,51 @@
 import { useEffect, useState, FC } from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
+import Chart, { ChartData } from "chart.js/auto";
 import { CategoryScale } from "chart.js";
-import useRateDifference from "../utils/useRateDifference";
 
 Chart.register(CategoryScale);
 
-type GraphProps = {
-  graph: any;
-  baseCurr: string;
-  wanted: string;
-  big?: boolean;
-  setAddFavCurr?: (addFavCurr: string) => void;
+type currObj = {
+  name: string;
+  base: string;
+  value: number;
+  diffAmount?: string;
+  diffPercentage?: string;
+  timeseries: number[];
+  dates: string[];
 };
 
-const Graph: FC<GraphProps> = ({
-  graph,
-  baseCurr: baseCurr,
-  wanted,
-  big = false,
-  setAddFavCurr,
-}) => {
-  const [graphData, setGraphData] = useState<any>(null);
+type GraphProps = {
+  obj: currObj;
+  big?: boolean;
+  setAddFavCurr?: (addFavCurr: boolean) => void;
+};
 
-  const { rateDifference } = useRateDifference(graph);
+const Graph: FC<GraphProps> = ({ obj, big = false, setAddFavCurr }) => {
+  const [graphData, setGraphData] = useState<ChartData<"line", unknown>>();
 
-  const getValues = (searchedCurrency: string) => {
-    let values: number[] = [];
-
-    graph &&
-      Object.entries(graph).forEach((entry) => {
-        const found =
-          graph &&
-          Object.entries(entry[1] as [string, number]).find((ent) => {
-            return ent[0] === searchedCurrency;
-          });
-        values.push(found[1]);
-      });
-    return values;
-  };
-  const timeSeries = graph && getValues(wanted);
-
-  const difference = rateDifference(wanted);
-
-  const dateFormatting = () => {
-    const getDates = Object.keys(graph);
-    const cutYear = getDates.map((date: string) => {
-      return date.substring(5);
-    });
-    const changeFormat = cutYear.map((date) => {
-      const day = date.slice(-2);
-      const month = date.slice(0, 2);
-      return day.concat(".", month);
-    });
-    return changeFormat;
-  };
-  const dates = graph && dateFormatting();
+  const { name, base, timeseries, dates, diffAmount, diffPercentage } = obj;
 
   useEffect(() => {
-    setGraphData({
-      labels: dates && dates.length > 1 && dates.map((date: any) => date),
-      datasets: [
-        {
-          label: `${wanted} / ${baseCurr}`,
-          data:
-            timeSeries &&
-            timeSeries.length > 1 &&
-            timeSeries.map((data: any) => data),
-          borderColor: "rgba(54, 162, 235)",
-          backgroundColor: "rgba(54, 162, 235)",
-        },
-      ],
-    });
-  }, [graph, wanted, baseCurr]);
+    obj &&
+      setGraphData({
+        labels:
+          dates && dates.length > 1
+            ? dates.map((date: string) => date)
+            : undefined,
+        datasets: [
+          {
+            label: `${name} / ${base}`,
+            data:
+              timeseries && timeseries.length > 1
+                ? timeseries.map((data: number) => data)
+                : [null],
+            borderColor: "rgba(54, 162, 235)",
+            backgroundColor: "rgba(54, 162, 235)",
+          },
+        ],
+      });
+  }, [obj]);
 
   const options = big
     ? {
@@ -114,31 +87,29 @@ const Graph: FC<GraphProps> = ({
     <section className="mt-2 p-1 border-2 border-black h-[250px] w-[450px] sm:w-[600px] md:w-[500px] lg:w-[600px] lg:mr-4  xl:w-[660px]">
       <div className="h-[27px] pl-2 flex justify-between border-b-[1px] border-black border-dotted">
         <div className="text-base font-normal">
-          {`${wanted} / `}
-          <span className="text-sm font-light">{baseCurr}</span>
+          {`${name} / `}
+          <span className="text-sm font-light">{base}</span>
         </div>
         <div
           className={`flex ${
-            difference && difference[0][0] === "-"
+            diffAmount && diffAmount[0] === "-"
               ? "text-red-500"
               : "text-green-500"
           }`}
         >
           <span>
-            {difference &&
-              (difference[0][0] === "-"
-                ? difference[0].slice(1)
-                : difference[0])}
+            {diffAmount &&
+              (diffAmount[0] === "-" ? diffAmount.slice(1) : diffAmount)}
           </span>
           <span className="pl-5">
-            {difference &&
-              (difference[1][0] === "-"
-                ? difference[1].slice(1)
-                : difference[1])}
+            {diffPercentage &&
+              (diffPercentage[0] === "-"
+                ? diffPercentage.slice(1)
+                : diffPercentage)}
           </span>
         </div>
         <button
-          onClick={() => setAddFavCurr!(wanted)}
+          onClick={() => setAddFavCurr && setAddFavCurr(true)}
           className="text-black bg-slate-200 w-[150px] border-[1px] border-black rounded-lg mb-1 text-sm"
         >
           add to favorites

@@ -4,13 +4,18 @@ type CurrencyProps = {
   name: string;
   value: number;
   base: string;
-  setId: (id: string) => void;
+  setMiddleman: (middleman: string) => void;
 };
 
-export const Currency: FC<CurrencyProps> = ({ name, value, base, setId }) => {
+export const Currency: FC<CurrencyProps> = ({
+  name,
+  value,
+  base,
+  setMiddleman,
+}) => {
   return (
     <div
-      onClick={() => setId(name)}
+      onClick={() => setMiddleman(name)}
       className="w-24 text-center p-1 border-[1px] border-black rounded-md bg-slate-100 cursor-pointer select-none"
     >
       <div className="text-xs font-bold">
