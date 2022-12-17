@@ -32,13 +32,27 @@ const Favorites: FC<FavoritesProps> = ({
   const [arrayFavoritesCurrency, setArrayFavoritesCurrency] = useState<
     currObj[]
   >([]);
-  const [initialFavorites, setInitialFavorites] = useState<[string, string][]>([
-    ["JPY", "USD"],
-    ["EUR", "PLN"],
-    ["USD", "GBP"],
-  ]);
+  const [initialFavorites, setInitialFavorites] = useState<[string, string][]>(
+    () => {
+      const saved = localStorage.getItem("initialFavorites");
+      const initialValue = saved && JSON.parse(saved);
+      if (initialValue?.length > 0) {
+        return initialValue;
+      } else {
+        return [
+          ["JPY", "USD"],
+          ["EUR", "PLN"],
+          ["USD", "GBP"],
+        ];
+      }
+    }
+  );
   const [middleman, setMiddleman] = useState<currObj>();
   const [trash, setTrash] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("initialFavorites", JSON.stringify(initialFavorites));
+  }, [initialFavorites]);
 
   useEffect(() => {
     middleman && setItem(middleman);
@@ -73,7 +87,7 @@ const Favorites: FC<FavoritesProps> = ({
   const removeInitFav = (base: string, name: string) => {
     const arrayCopy = [...initialFavorites];
     const newArray = arrayCopy.filter((elem) => {
-      return elem[0] !== base && elem[1] !== name;
+      return !(elem[0] === base && elem[1] === name);
     });
     setInitialFavorites(newArray);
   };
